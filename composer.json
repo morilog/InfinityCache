@@ -6,6 +6,11 @@
         "illuminate/cache": "^5.1",
         "illuminate/support": "^5.1"
     },
+    "autoload": {
+        "psr-4": {
+            "Morilog\\InfinityCache\\": "src/"
+        }
+    },
     "license": "MIT",
     "authors": [
         {
