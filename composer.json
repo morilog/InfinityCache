@@ -1,6 +1,6 @@
 {
     "name": "morilog/infinity-cache",
-    "description": "Infinity cache for Laravel Eloquent models adn queries",
+    "description": "Infinity cache for Laravel Eloquent models and queries",
     "require": {
         "illuminate/database": "^5.1",
         "illuminate/cache": "^5.1",
