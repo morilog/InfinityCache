@@ -4,7 +4,9 @@
     "require": {
         "illuminate/database": "^5.1",
         "illuminate/cache": "^5.1",
-        "illuminate/support": "^5.1"
+        "illuminate/support": "^5.1",
+        "phpunit/phpunit": "^4.8",
+        "mockery/mockery": "^0.9.4"
     },
     "license": "MIT",
     "authors": [
