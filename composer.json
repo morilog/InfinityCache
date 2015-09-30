@@ -1,7 +1,7 @@
 {
     "name": "morilog/infinity-cache",
     "type": "library",
-    "keywords": ["Laravel", "Cache", "Eloquent", "Eloquent-Cache", "Full-Cache", "infinity-cache", "morilog", "laratalks"],
+    "keywords": ["Laravel", "Cache", "Eloquent", "Eloquent-Cache", "Full-Cache", "infinity-cache", "morilog", "laratalks", "morilog.ir"],
     "description": "Infinity cache for Laravel Eloquent models and queries",
     "require": {
         "illuminate/database": "^5.1",
