@@ -14,5 +14,10 @@
             "name": "Morteza Parvini",
             "email": "m.parvini@outlook.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+          "Morilog\\InfinityCache\\": "src/"
+        }
+  }
 }
