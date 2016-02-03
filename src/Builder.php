@@ -61,6 +61,16 @@ class Builder extends QueryBuilder
         return $results;
     }
 
+    /**
+     * Get a new instance of the query builder.
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function newQuery()
+    {
+        return new static($this->cache, $this->connection, $this->grammar, $this->processor, $this->cacheTag);
+    }
+
 
 
 
