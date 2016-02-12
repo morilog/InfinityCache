@@ -19,7 +19,7 @@ namespace App\Models;
 
 use Morilog\InfinityCache\Model as InifinityCacheModel;
 
-class Post extends InifnityCacheModel 
+class Post extends InifinityCacheModel 
 {
   ...
 }
