@@ -38,6 +38,11 @@ class Builder extends QueryBuilder
         $this->cacheTag = $cacheTag;
     }
 
+    /**
+     * Generate unique cache key from query and it bindings parameters
+     *
+     * @return string
+     */
     public function generateCacheKey()
     {
         return sha1($this->connection->getName() . $this->toSql() . serialize($this->getBindings()));
@@ -53,10 +58,14 @@ class Builder extends QueryBuilder
     {
         $cacheKey = $this->generateCacheKey();
 
+        // Check cache for any result of query
+        // if results exists, retrieve it from cache
+        // else querying from db and store result to cache storage
         if (null === ($results = $this->cache->tags($this->cacheTag)->get($cacheKey))) {
             $results = parent::get($columns);
             $this->cache->tags($this->cacheTag)->forever($cacheKey, $results);
         }
+
 
         return $results;
     }
@@ -64,14 +73,10 @@ class Builder extends QueryBuilder
     /**
      * Get a new instance of the query builder.
      *
-     * @return \Illuminate\Database\Query\Builder
+     * @return Builder
      */
     public function newQuery()
     {
         return new static($this->cache, $this->connection, $this->grammar, $this->processor, $this->cacheTag);
     }
-
-
-
-
 }
