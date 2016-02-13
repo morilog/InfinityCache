@@ -5,10 +5,25 @@ A Laravel package Eloquent cache. InfinityCache provides infinity and forever ca
 This package works only with ***taggable cache storages*** and drivers such as `memcached` or `Redis` and other storages that extended from `Illuminate\Cache\TaggedCache`.
 
 ### Installation
-For install this package just run composer with this command:
+For install this package run composer with this command:
 ~~~ bash
 composer require morilog/infinity-cache
 ~~~
+
+Add the ServiceProvider to your `config/app.php` providers array:
+~~~ php
+    'providers' => [
+        ...
+        Morilog\InfinityCache\InfinityCacheServiceProvider::class,
+        ...
+    ]
+~~~
+
+Then publish the config file:
+~~~ php
+php artisan vendor:publish --provider="Morilog\InfinityCache\InfinityCacheServiceProvider" --tag="config"
+~~~
+
 ### Usage
 For using InfinityCache, your eloquent model must be extends `Morilog\InfinityCache\Model` 
 
@@ -17,9 +32,9 @@ example:
 <?php
 namespace App\Models;
 
-use Morilog\InfinityCache\Model as InifinityCacheModel;
+use Morilog\InfinityCache\Model as InfinityCacheModel;
 
-class Post extends InifnityCacheModel 
+class Post extends InfinityCacheModel
 {
   ...
 }
