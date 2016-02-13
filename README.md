@@ -9,6 +9,12 @@ For install this package just run composer with this command:
 ~~~ bash
 composer require morilog/infinity-cache
 ~~~
+
+Then publish the config file:
+~~~ php
+php artisan vendor:publish --provider="Morilog\InfinityCache\InfinityCacheServiceProvider" --tag="config"
+~~~
+
 ### Usage
 For using InfinityCache, your eloquent model must be extends `Morilog\InfinityCache\Model` 
 
@@ -17,9 +23,9 @@ example:
 <?php
 namespace App\Models;
 
-use Morilog\InfinityCache\Model as InifinityCacheModel;
+use Morilog\InfinityCache\Model as InfinityCacheModel;
 
-class Post extends InifinityCacheModel 
+class Post extends InfinityCacheModel
 {
   ...
 }

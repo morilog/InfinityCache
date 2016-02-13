@@ -12,12 +12,22 @@ class Builder extends QueryBuilder
     /**
      * @var Repository
      */
-    private $cache;
+    protected $cache;
 
     /**
-     * @var
+     * @var string
      */
-    private $cacheTag;
+    protected $cacheTag;
+
+    /**
+     * @var bool
+     */
+    protected $isTimeAwareQuery = false;
+
+    /**
+     * @var int Minute
+     */
+    protected $cacheLifeTime;
 
     /**
      * @param Repository $cache
@@ -34,22 +44,19 @@ class Builder extends QueryBuilder
         $cacheTag
     ) {
         $this->cache = $cache;
-        parent::__construct($connection, $grammar, $processor);
         $this->cacheTag = $cacheTag;
-    }
 
-    /**
-     * Generate unique cache key from query and it bindings parameters
-     *
-     * @return string
-     */
-    public function generateCacheKey()
-    {
-        return sha1($this->connection->getName() . $this->toSql() . serialize($this->getBindings()));
+        // Get cache life time from config file
+        // Default set to 5 minutes
+        // This lifetime used in time aware queries
+        $this->cacheLifeTime = config('infinity-cache.lifeTime', 5);
+
+        parent::__construct($connection, $grammar, $processor);
     }
 
     /**
      * Execute the query as a "select" statement.
+     * All Cached results will be flushed after every CUD operations
      *
      * @param  array $columns
      * @return array|static[]
@@ -58,12 +65,16 @@ class Builder extends QueryBuilder
     {
         $cacheKey = $this->generateCacheKey();
 
-        // Check cache for any result of query
-        // if results exists, retrieve it from cache
-        // else querying from db and store result to cache storage
         if (null === ($results = $this->cache->tags($this->cacheTag)->get($cacheKey))) {
             $results = parent::get($columns);
-            $this->cache->tags($this->cacheTag)->forever($cacheKey, $results);
+
+            if ($this->isTimeAwareQuery) {
+                // Cache results for $cacheLifeTime minutes
+                $this->cache->tags($this->cacheTag)->put($cacheKey, $results, $this->cacheLifeTime);
+            } else {
+                // Cache results forever
+                $this->cache->tags($this->cacheTag)->forever($cacheKey, $results);
+            }
         }
 
 
@@ -77,6 +88,52 @@ class Builder extends QueryBuilder
      */
     public function newQuery()
     {
-        return new static($this->cache, $this->connection, $this->grammar, $this->processor, $this->cacheTag);
+        return new static(
+            $this->cache,
+            $this->connection,
+            $this->grammar,
+            $this->processor,
+            $this->cacheTag
+        );
     }
+
+    /**
+     * Generate unique cache key from query and it bindings parameters
+     *
+     * @return string
+     */
+    protected function generateCacheKey()
+    {
+        $bindings = array_map(function ($param) {
+
+            // Round datetime
+            if ($param instanceof \DateTime) {
+                $this->isTimeAwareQuery = true;
+                return $this->getRoundedDateTime($param);
+            }
+
+            return $param;
+
+        }, $this->getBindings());
+
+
+        return sha1($this->connection->getName() . $this->toSql() . serialize($bindings));
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     * @return string
+     */
+    protected function getRoundedDateTime(\DateTime $dateTime)
+    {
+        // Get cache life time in minutes and convert to second
+        $cacheLifeTime = $this->cacheLifeTime * 60;
+
+        $rounded = ceil($dateTime->getTimestamp() / $cacheLifeTime) * $cacheLifeTime;
+
+
+        return date('Y-m-d H:i:s', $rounded);
+    }
+
+
 }
