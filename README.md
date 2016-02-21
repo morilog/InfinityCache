@@ -1,11 +1,11 @@
 # InfinityCache
-A Laravel package Eloquent cache. InfinityCache provides infinity and forever cache for queries results unitl model changed. If model has been created or deleted or updated, model queries caches will be flushed.
+A Laravel package for Eloquent cache. InfinityCache provides infinity and forever cache for queries results until the model changes. If a model has been created, deleted or updated, model queries caches will be flushed.
 
 ### Requirements
 This package works only with ***taggable cache storages*** and drivers such as `memcached` or `Redis` and other storages that extended from `Illuminate\Cache\TaggedCache`.
 
 ### Installation
-For install this package run composer with this command:
+To install this package run this composer command:
 ~~~ bash
 composer require morilog/infinity-cache
 ~~~
@@ -25,7 +25,7 @@ php artisan vendor:publish --provider="Morilog\InfinityCache\InfinityCacheServic
 ~~~
 
 ### Usage
-For using InfinityCache, your eloquent model must be extends `Morilog\InfinityCache\Model` 
+For using InfinityCache, your eloquent model must extend `Morilog\InfinityCache\Model` 
 
 example:
 ~~~ php
